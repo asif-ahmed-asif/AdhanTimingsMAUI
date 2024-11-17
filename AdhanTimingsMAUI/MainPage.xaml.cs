@@ -56,31 +56,24 @@ namespace AdhanTimingsMAUI
         {
             if (e.SelectedItem is not LocationSuggestion selectedLocation) return;
 
-            try
-            {
-                string placeDetailsUrl = $"https://maps.googleapis.com/maps/api/place/details/json?place_id={selectedLocation.PlaceId}&key={GoogleApiKey}";
-                using var httpClient = new HttpClient();
-                var response = await httpClient.GetStringAsync(placeDetailsUrl);
+            LocationSearchBar.Text = string.Empty;
+            LocationSuggestions.Clear();
 
-                var placeDetails = JsonConvert.DeserializeObject<GooglePlaceDetailsResponse>(response);
-                var location = placeDetails.Result.Geometry.Location;
+            string placeDetailsUrl = $"https://maps.googleapis.com/maps/api/place/details/json?place_id={selectedLocation.PlaceId}&key={GoogleApiKey}";
 
-                string timeZoneUrl = $"https://maps.googleapis.com/maps/api/timezone/json?location={location.Lat},{location.Lng}&timestamp={DateTimeOffset.UtcNow.ToUnixTimeSeconds()}&key={GoogleApiKey}";
-                var timeZoneResponse = await httpClient.GetStringAsync(timeZoneUrl);
+            using var httpClient = new HttpClient();
+            var response = await httpClient.GetStringAsync(placeDetailsUrl);
 
-                var timeZoneData = JsonConvert.DeserializeObject<GoogleTimeZoneResponse>(timeZoneResponse);
-                var timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneData.TimeZoneId);
+            var placeDetails = JsonConvert.DeserializeObject<GooglePlaceDetailsResponse>(response);
+            var location = placeDetails.Result.Geometry.Location;
 
-                await LoadPrayerTimesAsync(location.Lat, location.Lng, timeZone);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error fetching location or time zone details: {ex.Message}");
-            }
-            finally
-            {
-                LocationSuggestionsList.SelectedItem = null;
-            }
+            string timeZoneUrl = $"https://maps.googleapis.com/maps/api/timezone/json?location={location.Lat},{location.Lng}&timestamp={DateTimeOffset.UtcNow.ToUnixTimeSeconds()}&key={GoogleApiKey}";
+            var timeZoneResponse = await httpClient.GetStringAsync(timeZoneUrl);
+
+            var timeZoneData = JsonConvert.DeserializeObject<GoogleTimeZoneResponse>(timeZoneResponse);
+            var timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneData.TimeZoneId);
+
+            await LoadPrayerTimesAsync(location.Lat, location.Lng, timeZone);
         }
 
         private async Task LoadPrayerTimesAsync(double latitude, double longitude, TimeZoneInfo timeZone)

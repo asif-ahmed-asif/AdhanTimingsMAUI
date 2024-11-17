@@ -29,15 +29,17 @@
                            HorizontalOptions="Center"
                            Color="Blue" />
 
-        <!-- Prayer Times Labels -->
-        <VerticalStackLayout Margin="10">
-            <Label x:Name="FajrLabel" FontSize="20" TextColor="Black" />
-            <Label x:Name="SunriseLabel" FontSize="20" TextColor="Black" />
-            <Label x:Name="DhuhrLabel" FontSize="20" TextColor="Black" />
-            <Label x:Name="AsrLabel" FontSize="20" TextColor="Black" />
-            <Label x:Name="MaghribLabel" FontSize="20" TextColor="Black" />
-            <Label x:Name="IshaLabel" FontSize="20" TextColor="Black" />
-        </VerticalStackLayout>
+        <Border Stroke="Gray" StrokeThickness="1" Padding="10" Margin="10">
+            <VerticalStackLayout>
+                <Label x:Name="FajrLabel" FontSize="20" TextColor="Black" />
+                <Label x:Name="SunriseLabel" FontSize="20" TextColor="Black" />
+                <Label x:Name="DhuhrLabel" FontSize="20" TextColor="Black" />
+                <Label x:Name="AsrLabel" FontSize="20" TextColor="Black" />
+                <Label x:Name="MaghribLabel" FontSize="20" TextColor="Black" />
+                <Label x:Name="IshaLabel" FontSize="20" TextColor="Black" />
+            </VerticalStackLayout>
+        </Border>
+
     </VerticalStackLayout>
 
 </ContentPage>
