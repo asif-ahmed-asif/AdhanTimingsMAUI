@@ -11,7 +11,7 @@ namespace AdhanTimingsMAUI.ViewModel
 {
     public partial class MainPageViewModel : ObservableObject
     {
-        private const string GoogleApiKey = "YOUR_GOOGLE_API_KEY"; // Replace with your actual API key
+        private const string GoogleApiKey = "AIzaSyCRIIew-eQp2QjI5mRLFOE-qoUnl-qKC38";
 
         // Observable properties
         [ObservableProperty]
