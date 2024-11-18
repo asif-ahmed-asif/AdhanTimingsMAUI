@@ -12,7 +12,14 @@ namespace AdhanTimingsMAUI.ViewModel
     {
         private const string GoogleApiKey = "AIzaSyCRIIew-eQp2QjI5mRLFOE-qoUnl-qKC38";
 
-        // Observable properties
+        private static readonly LocationSuggestion DefaultLocation = new LocationSuggestion
+        {
+            Description = "New York, NY",
+            Latitude = 40.7128,
+            Longitude = -74.0060,
+            TimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time")
+        };
+
         [ObservableProperty]
         private ObservableCollection<LocationSuggestion> locationSuggestions = new();
 
@@ -30,9 +37,10 @@ namespace AdhanTimingsMAUI.ViewModel
 
         public MainPageViewModel()
         {
+            SelectedLocation = DefaultLocation;
+            _ = LoadPrayerTimesAsync(DefaultLocation.Latitude, DefaultLocation.Longitude, DefaultLocation.TimeZone);
         }
 
-        // Property changed partial methods
         partial void OnSearchTextChanged(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
@@ -47,7 +55,10 @@ namespace AdhanTimingsMAUI.ViewModel
 
         partial void OnSelectedDateChanged(DateTime value)
         {
-            _ = LoadPrayerTimesAsync(SelectedLocation.Latitude, SelectedLocation.Longitude, SelectedLocation.TimeZone);
+            if (SelectedLocation != null)
+            {
+                _ = LoadPrayerTimesAsync(SelectedLocation.Latitude, SelectedLocation.Longitude, SelectedLocation.TimeZone);
+            }
         }
 
         partial void OnSelectedLocationChanged(LocationSuggestion value)
@@ -60,7 +71,6 @@ namespace AdhanTimingsMAUI.ViewModel
             }
         }
 
-        // Methods
         private async Task SearchLocationsAsync(string query)
         {
             var url = $"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={query}&types=(regions)&key={GoogleApiKey}";
@@ -103,21 +113,18 @@ namespace AdhanTimingsMAUI.ViewModel
                 var response = await httpClient.GetStringAsync(placeDetailsUrl);
                 var placeDetails = JsonConvert.DeserializeObject<GooglePlaceDetailsResponse>(response);
 
-                var location = placeDetails?.Result.Geometry.Location;
+                var location = placeDetails?.Result?.Geometry?.Location;
 
-                // Extract zip code if needed
-                var zipCodeComponent = placeDetails?.Result.AddressComponents.FirstOrDefault(c =>
+                var zipCodeComponent = placeDetails?.Result?.AddressComponents.FirstOrDefault(c =>
                     c.Types.Contains("postal_code"));
                 selectedLocation.ZipCode = zipCodeComponent?.LongName;
 
-                // Fetch Time Zone
                 var timeZoneUrl = $"https://maps.googleapis.com/maps/api/timezone/json?location={location?.Lat},{location?.Lng}&timestamp={DateTimeOffset.UtcNow.ToUnixTimeSeconds()}&key={GoogleApiKey}";
                 var timeZoneResponse = await httpClient.GetStringAsync(timeZoneUrl);
 
                 var timeZoneData = JsonConvert.DeserializeObject<GoogleTimeZoneResponse>(timeZoneResponse);
                 var timeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneData?.TimeZoneId);
 
-                // Update selected location details
                 selectedLocation.Latitude = location.Lat;
                 selectedLocation.Longitude = location.Lng;
                 selectedLocation.TimeZone = timeZone;
