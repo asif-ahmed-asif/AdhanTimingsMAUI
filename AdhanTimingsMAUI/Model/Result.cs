@@ -7,5 +7,8 @@ namespace AdhanTimingsMAUI.Model
     {
         [JsonProperty("geometry")]
         public Geometry Geometry { get; set; }
+
+        [JsonProperty("address_components")]
+        public List<AddressComponent> AddressComponents { get; set; }
     }
 }

@@ -2,44 +2,52 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AdhanTimingsMAUI.MainPage"
+             xmlns:viewmodel="clr-namespace:AdhanTimingsMAUI.ViewModel"
+             x:DataType="viewmodel:MainPageViewModel"
              Title="Prayer Times">
 
     <VerticalStackLayout Padding="10">
         <!-- Search Bar for Location -->
-        <SearchBar x:Name="LocationSearchBar"
-                   Placeholder="Search for a location"
-                   TextChanged="OnSearchTextChanged" />
+        <SearchBar Placeholder="Search for a location"
+               Text="{Binding SearchText}" />
 
-        <!-- List for Location Suggestions -->
-        <ListView x:Name="LocationSuggestionsList"
-                  SelectionMode="Single"
-                  ItemSelected="OnLocationSelected">
-            <ListView.ItemTemplate>
+        <!-- CollectionView for Location Suggestions -->
+        <CollectionView ItemsSource="{Binding LocationSuggestions}"
+                    SelectionMode="Single"
+                    SelectedItem="{Binding SelectedLocation, Mode=TwoWay}"
+                    Margin="0,10,0,0">
+            <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Description}" />
+                    <Border Margin="5" Padding="10">
+                        <Label Text="{Binding Description}" FontSize="16" TextColor="Black" />
+                    </Border>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
-        <!-- Loading Indicator -->
-        <ActivityIndicator x:Name="LoadingIndicator"
-                           IsRunning="False"
-                           IsVisible="False"
-                           VerticalOptions="Center"
-                           HorizontalOptions="Center"
-                           Color="Blue" />
+        <!-- DatePicker for Selecting Date -->
+        <HorizontalStackLayout Margin="0,10,0,0" VerticalOptions="Center">
+            <Label Text="Select Date:" FontSize="18" VerticalTextAlignment="Center" />
+            <DatePicker Date="{Binding SelectedDate}" Margin="10,0,0,0" />
+        </HorizontalStackLayout>
 
-        <Border Stroke="Gray" StrokeThickness="1" Padding="10" Margin="10">
-            <VerticalStackLayout>
-                <Label x:Name="FajrLabel" FontSize="20" TextColor="Black" />
-                <Label x:Name="SunriseLabel" FontSize="20" TextColor="Black" />
-                <Label x:Name="DhuhrLabel" FontSize="20" TextColor="Black" />
-                <Label x:Name="AsrLabel" FontSize="20" TextColor="Black" />
-                <Label x:Name="MaghribLabel" FontSize="20" TextColor="Black" />
-                <Label x:Name="IshaLabel" FontSize="20" TextColor="Black" />
-            </VerticalStackLayout>
-        </Border>
+        <!-- Label to Display Selected Location -->
+        <Label Text="{Binding SelectedLocation.Description, StringFormat='Selected Location: {0}'}"
+           FontSize="18" Margin="0,10,0,0" TextColor="Black" />
 
+        <!-- CollectionView for Prayer Times -->
+        <CollectionView ItemsSource="{Binding PrayerTimes}"
+                    Margin="0,10,0,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Stroke="Gray" StrokeThickness="1" Padding="10" Margin="5">
+                        <HorizontalStackLayout>
+                            <Label Text="{Binding Name}" FontSize="18" FontAttributes="Bold" WidthRequest="100" />
+                            <Label Text="{Binding Time}" FontSize="18" TextColor="Black" HorizontalOptions="EndAndExpand" />
+                        </HorizontalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </VerticalStackLayout>
-
 </ContentPage>
