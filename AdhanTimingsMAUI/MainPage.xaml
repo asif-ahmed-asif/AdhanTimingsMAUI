@@ -34,7 +34,7 @@
         </HorizontalStackLayout>
 
         <!-- Label to Display Selected Location -->
-        <Label Text="{Binding SelectedLocation.Description, StringFormat='Selected Location: {0}'}"
+        <Label Text="{Binding SelectedLocation.Description, StringFormat='Location: {0}'}"
            FontSize="18" Margin="0,10,0,0" TextColor="Black" />
 
         <!-- CollectionView for Prayer Times -->
