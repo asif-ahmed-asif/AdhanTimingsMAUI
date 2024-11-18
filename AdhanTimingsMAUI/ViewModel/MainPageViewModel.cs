@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using AdhanTimingsMAUI.Model;
 using Adhan.Internal;
 using Adhan;
-using System.ComponentModel;
 
 namespace AdhanTimingsMAUI.ViewModel
 {

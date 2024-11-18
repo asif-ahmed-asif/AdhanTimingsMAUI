@@ -3,13 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AdhanTimingsMAUI.MainPage"
              xmlns:viewmodel="clr-namespace:AdhanTimingsMAUI.ViewModel"
+             xmlns:model="clr-namespace:AdhanTimingsMAUI.Model"
              x:DataType="viewmodel:MainPageViewModel"
              Title="Prayer Times">
 
     <VerticalStackLayout Padding="10">
         <!-- Search Bar for Location -->
-        <SearchBar Placeholder="Search for a location"
-               Text="{Binding SearchText}" />
+        <SearchBar x:Name="LocationSearchBar"
+                   Placeholder="Search for a location"
+                   Text="{Binding SearchText}" />
 
         <!-- CollectionView for Location Suggestions -->
         <CollectionView ItemsSource="{Binding LocationSuggestions}"
@@ -17,7 +19,7 @@
                     SelectedItem="{Binding SelectedLocation, Mode=TwoWay}"
                     Margin="0,10,0,0">
             <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="model:LocationSuggestion">
                     <Border Margin="5" Padding="10">
                         <Label Text="{Binding Description}" FontSize="16" TextColor="Black" />
                     </Border>
@@ -27,7 +29,7 @@
 
         <!-- DatePicker for Selecting Date -->
         <HorizontalStackLayout Margin="0,10,0,0" VerticalOptions="Center">
-            <Label Text="Select Date:" FontSize="18" VerticalTextAlignment="Center" />
+            <Label Text="Date:" FontSize="18" VerticalTextAlignment="Center" />
             <DatePicker Date="{Binding SelectedDate}" Margin="10,0,0,0" />
         </HorizontalStackLayout>
 
@@ -39,7 +41,7 @@
         <CollectionView ItemsSource="{Binding PrayerTimes}"
                     Margin="0,10,0,0">
             <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="model:PrayerTimeItem">
                     <Border Stroke="Gray" StrokeThickness="1" Padding="10" Margin="5">
                         <HorizontalStackLayout>
                             <Label Text="{Binding Name}" FontSize="18" FontAttributes="Bold" WidthRequest="100" />
