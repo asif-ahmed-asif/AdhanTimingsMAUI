@@ -8,20 +8,15 @@ namespace AdhanTimingsMAUI
         {
             InitializeComponent();
             BindingContext = viewModel;
-        }
 
-        private void OnBindingContextChanged(object sender, EventArgs e)
-        {
-            if (BindingContext is MainPageViewModel viewModel)
+            // Subscribe to property changes
+            (BindingContext as MainPageViewModel).PropertyChanged += (s, e) =>
             {
-                viewModel.PropertyChanged += (s, args) =>
+                if (e.PropertyName == nameof(MainPageViewModel.SelectedLocation))
                 {
-                    if (args.PropertyName == nameof(viewModel.SelectedLocation) && viewModel.SelectedLocation != null)
-                    {
-                        LocationSearchBar.Unfocus();
-                    }
-                };
-            }
+                    LocationSearchBar.Unfocus();
+                }
+            };
         }
     }
 }
