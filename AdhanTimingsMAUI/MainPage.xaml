@@ -33,6 +33,16 @@
             <DatePicker Date="{Binding SelectedDate}" Margin="10,0,0,0" />
         </HorizontalStackLayout>
 
+        <!-- Picker for Calculation Method -->
+        <HorizontalStackLayout Margin="0,10,0,0" VerticalOptions="Center">
+            <Label Text="Calculation Method:" FontSize="18" VerticalTextAlignment="Center" />
+            <Picker ItemsSource="{Binding CalculationMethods}"
+                    SelectedItem="{Binding SelectedCalculationMethod, Mode=TwoWay}"
+                    ItemDisplayBinding="{Binding .}"
+                    Margin="10,0,0,0" />
+        </HorizontalStackLayout>
+
+
         <!-- Label to Display Selected Location -->
         <Label Text="{Binding SelectedLocation.Description, StringFormat='Location: {0}'}"
            FontSize="18" Margin="0,10,0,0" TextColor="Black" />

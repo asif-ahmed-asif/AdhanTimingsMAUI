@@ -35,6 +35,11 @@ namespace AdhanTimingsMAUI.ViewModel
         [ObservableProperty]
         private DateTime selectedDate = DateTime.Today;
 
+        [ObservableProperty]
+        private CalculationMethod selectedCalculationMethod = CalculationMethod.NORTH_AMERICA;
+
+        public IEnumerable<CalculationMethod> CalculationMethods { get; } = Enum.GetValues(typeof(CalculationMethod)).Cast<CalculationMethod>();
+
         public MainPageViewModel()
         {
             SelectedLocation = DefaultLocation;
@@ -68,6 +73,14 @@ namespace AdhanTimingsMAUI.ViewModel
                 SearchText = string.Empty;
                 LocationSuggestions.Clear();
                 _ = SelectLocationAsync(value);
+            }
+        }
+
+        partial void OnSelectedCalculationMethodChanged(CalculationMethod value)
+        {
+            if (SelectedLocation != null)
+            {
+                _ = LoadPrayerTimesAsync(SelectedLocation.Latitude, SelectedLocation.Longitude, SelectedLocation.TimeZone);
             }
         }
 
@@ -143,7 +156,7 @@ namespace AdhanTimingsMAUI.ViewModel
             {
                 Coordinates coordinates = new(latitude, longitude);
                 DateComponents dateComponents = DateComponents.From(SelectedDate);
-                CalculationParameters parameters = CalculationMethod.NORTH_AMERICA.GetParameters();
+                CalculationParameters parameters = SelectedCalculationMethod.GetParameters();
 
                 PrayerTimes prayerTimesResult = new(coordinates, dateComponents, parameters);
 
