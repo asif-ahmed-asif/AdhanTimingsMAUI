@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using AdhanTimingsMAUI.Model;
 using Adhan.Internal;
 using Adhan;
+using Plugin.LocalNotification;
 
 namespace AdhanTimingsMAUI.ViewModel
 {
@@ -167,11 +168,34 @@ namespace AdhanTimingsMAUI.ViewModel
                 PrayerTimes.Add(new PrayerTimeItem { Name = "Asr", Time = TimeZoneInfo.ConvertTimeFromUtc(prayerTimesResult.Asr, timeZone).ToString("hh:mm tt") });
                 PrayerTimes.Add(new PrayerTimeItem { Name = "Maghrib", Time = TimeZoneInfo.ConvertTimeFromUtc(prayerTimesResult.Maghrib, timeZone).ToString("hh:mm tt") });
                 PrayerTimes.Add(new PrayerTimeItem { Name = "Isha", Time = TimeZoneInfo.ConvertTimeFromUtc(prayerTimesResult.Isha, timeZone).ToString("hh:mm tt") });
+
+                ScheduleAdhanNotificationsAsync();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error loading prayer times: {ex.Message}");
             }
         }
+
+        private void ScheduleAdhanNotificationsAsync()
+        {
+            foreach (var prayer in PrayerTimes)
+            {
+                if (DateTime.TryParse(prayer.Time, out var prayerTime) && prayerTime > DateTime.Now)
+                {
+                    var notification = new NotificationRequest
+                    {
+                        NotificationId = new Random().Next(),
+                        Title = "It's time for prayer",
+                        Description = "Prayer time has arrived.",
+                        BadgeNumber = 42,
+                        Schedule = new NotificationRequestSchedule { NotifyTime = prayerTime }
+                    };
+
+                    LocalNotificationCenter.Current.Show(notification);
+                }
+            }
+        }
+
     }
 }

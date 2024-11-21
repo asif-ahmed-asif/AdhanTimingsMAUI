@@ -1,5 +1,6 @@
 ﻿using AdhanTimingsMAUI.ViewModel;
 using Microsoft.Extensions.Logging;
+using Plugin.LocalNotification;
 
 namespace AdhanTimingsMAUI
 {
@@ -10,6 +11,7 @@ namespace AdhanTimingsMAUI
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseLocalNotification()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
